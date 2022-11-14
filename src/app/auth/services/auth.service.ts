@@ -25,7 +25,7 @@ export class AuthService {
 
     return this.http.post<Response>(url, body)
       .pipe(
-        tap(this.loadUser),
+        tap(this.saveJWT),
         map(resp => resp.ok),
         catchError((err: HttpErrorResponse) => of(err.error.msg))
       );
@@ -52,7 +52,7 @@ export class AuthService {
 
     return this.http.post<Response>(url, body)
       .pipe(
-        tap(this.loadUser),
+        tap(this.saveJWT),
         map(resp => resp.ok),
         catchError((err: HttpErrorResponse) => of(err.error.msg))
       );
@@ -62,10 +62,16 @@ export class AuthService {
     localStorage.removeItem('token');
   }
 
-  private loadUser (resp: Response): void {
+  private saveJWT (resp: Response): void {
     if (resp.ok) {
        localStorage.setItem('token', resp.token!);
-       this._user =  {
+    }
+  }
+
+  private loadUser (resp: Response): void {
+    if (resp.ok) {
+      this._user =  {
+        email: resp.email!,
         name: resp.name!,
         uid: resp.uid!
       }
