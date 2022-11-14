@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-
+import Swal from 'sweetalert2';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html'
@@ -22,10 +22,11 @@ export class LoginComponent  {
 
     this.authService.login(email, password)
       .subscribe(ok => {
-        if (ok) {
+        console.log(ok);
+        if (ok === true) {
           this.router.navigateByUrl('/dashboard');
-        } else {
-          // TODO: message error
+        } else if (typeof ok === 'string') {
+          Swal.fire('Error', ok, 'error');
         }
       });
   }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -18,7 +18,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  public login(email: string, password: string): Observable<boolean> {
+  public login(email: string, password: string): Observable<boolean | string> {
     const url: string = `${this.baseUrl}/auth`
 
     const body = { email, password };
@@ -27,14 +27,14 @@ export class AuthService {
       .pipe(
         tap(resp => {
           if (resp.ok) {
-            this._user =  {
+             this._user =  {
               name: resp.name!,
               uid: resp.uid!
             }
           }
         }),
         map(resp => resp.ok),
-        catchError(err => of(false))
+        catchError((err:HttpErrorResponse) => of(err.error.msg))
       );
   }
 }
