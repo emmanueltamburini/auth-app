@@ -5,3 +5,8 @@ export interface Response {
   name?:   string;
   token?: string;
 }
+
+export interface User {
+  uid:    string;
+  name:   string;
+}

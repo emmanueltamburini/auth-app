@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Response } from '../interfaces/auth.interfaces';
+import { Response, User } from '../interfaces/auth.interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -10,14 +10,31 @@ import { Response } from '../interfaces/auth.interfaces';
 export class AuthService {
 
   private baseUrl: string = environment.baseUrl;
+  private _user!: User;
+
+  get user(): User {
+    return {...this._user};
+  }
 
   constructor(private http: HttpClient) {}
 
-  public login(email: string, password: string): Observable<Response> {
+  public login(email: string, password: string): Observable<boolean> {
     const url: string = `${this.baseUrl}/auth`
 
     const body = { email, password };
 
-    return this.http.post<Response>(url, body);
+    return this.http.post<Response>(url, body)
+      .pipe(
+        tap(resp => {
+          if (resp.ok) {
+            this._user =  {
+              name: resp.name!,
+              uid: resp.uid!
+            }
+          }
+        }),
+        map(resp => resp.ok),
+        catchError(err => of(false))
+      );
   }
 }

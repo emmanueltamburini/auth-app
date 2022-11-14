@@ -21,9 +21,12 @@ export class LoginComponent  {
     const {email, password} = this.form.value;
 
     this.authService.login(email, password)
-      .subscribe(response => {
-        console.log(response);
+      .subscribe(ok => {
+        if (ok) {
+          this.router.navigateByUrl('/dashboard');
+        } else {
+          // TODO: message error
+        }
       });
-    // this.router.navigateByUrl('/dashboard');
   }
 }
