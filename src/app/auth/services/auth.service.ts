@@ -45,6 +45,19 @@ export class AuthService {
       );
   }
 
+  public createUser(name: string, email: string, password: string): Observable<boolean | string> {
+    const url: string = `${this.baseUrl}/auth/user`
+
+    const body = { name, email, password };
+
+    return this.http.post<Response>(url, body)
+      .pipe(
+        tap(this.loadUser),
+        map(resp => resp.ok),
+        catchError((err: HttpErrorResponse) => of(err.error.msg))
+      );
+  }
+
   public logout(): void {
     localStorage.removeItem('token');
   }

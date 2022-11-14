@@ -17,12 +17,10 @@ export class LoginComponent  {
   constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {}
 
   public login(): void {
-    console.log(this.form.value);
     const {email, password} = this.form.value;
 
     this.authService.login(email, password)
       .subscribe(ok => {
-        console.log(ok);
         if (ok === true) {
           this.router.navigateByUrl('/dashboard');
         } else if (typeof ok === 'string') {

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -14,11 +16,19 @@ export class RegisterComponent {
     password: ['', [Validators.required, Validators.minLength(6)]]
   });
 
-  constructor(private fb: FormBuilder, private router: Router) {}
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {}
 
   public register(): void {
     console.log(this.form.value);
-    this.router.navigateByUrl('/dashboard');
+    const {name, email, password} = this.form.value;
+    this.authService.createUser(name, email, password)
+      .subscribe(ok => {
+        if (ok === true) {
+          this.router.navigateByUrl('/dashboard');
+        } else if (typeof ok === 'string') {
+          Swal.fire('Error', ok, 'error');
+        }
+      });
   }
 
 }
