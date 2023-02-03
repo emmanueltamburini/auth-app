@@ -1,6 +1,6 @@
-# GraphicsApp
+# AuthApp
 
-## GraphicsApp README
+## AuthApp README
 
 This app is an example about angular framework, Its functionality is to simulate to login and sign up forms with fields validations, and using JWT to generate authorization to be in logged views using a nodejs server [auth-back-nodejs](https://github.com/emmanueltamburini/auth-back-nodejs) to serve the api from this app.
 
